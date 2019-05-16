@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -19,6 +20,7 @@ import javax.swing.JPanel;
 public class sorting extends JFrame {
 	
 	private JPanel visual;
+	private Dimension visualview;
 	private JButton run, stop, back, reset, exit;
 	private int buttonselect;
 	private JLabel pro, al;
@@ -93,11 +95,9 @@ public class sorting extends JFrame {
 		buttonplace.add(reset);
 		buttonplace.add(exit);
 		
+		
 		visual= new showpanel();
-		visual.setBounds(80, 30, 700, 400);
-		panely=visual.getHeight()-100;
-		panelx=visual.getWidth()-100;
-		System.out.print(panely);
+		
 		
 		visual.setBackground(Color.gray);
 		add(visual,BorderLayout.CENTER);
@@ -123,19 +123,29 @@ public class sorting extends JFrame {
 		}
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
+			
+			//§ì²{¦bµøµ¡¤Ø¤o
+			visualview = this.getSize();
+			int vwidth = (int) (visualview.width);
+			int vheight = (int) (visualview.height);
+			visual.setBounds(5, 25, ((int)vwidth),  ((int)vheight));
+			
 			for (int i = 0; i < pointcount; i++){
-				x = rand.nextInt(panelx)+50;
-	            y = rand.nextInt(panely)+50;
+				
+				x = rand.nextInt((int)(vwidth))+10;
+				//Á×§K³Qbutton»\±¼
+	            y = rand.nextInt((int)(vheight-35))+20;
 	            Point p = new Point(x, y);
 	            points[i]=p;
 				if(points[i]!=null){
+					
 					g.fillOval(points[i].x, points[i].y,10,10);
 				}
 			}	
 			
 			
 			}
-			//repaint();
+			
 		}
 	
 	
