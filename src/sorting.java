@@ -18,135 +18,182 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class sorting extends JFrame {
-	
+
 	private JPanel visual;
 	private Dimension visualview;
 	private JButton run, stop, back, reset, exit;
-	private int buttonselect;
+	int buttonselect = 0;
 	private JLabel pro, al;
-	private JComboBox prodemo,aldemo;
-	private int proselect,alselect;
-	private static final String[] algorithm={"selection sort","bubble sort","quicksort"};
-	private static final String[] problem={"sorting","other"};
-	public Point points[] = new Point[100];
-	private int x,y;
-	public int panelx,panely;
+	private JComboBox prodemo, aldemo;
+	private int proselect, alselect;
+	private static final String[] algorithm = { "selection sort", "bubble sort", "quicksort" };
+	private static final String[] problem = { "sorting", "other" };
+	public static Point points[] = new Point[100];
+	public static Point swape[] = new Point[100];
+	 int x, y;
+	static int vwidth,vheight;
 	
-	private int pointcount=100;
+	public int panelx, panely;
+
+	private int pointcount = 100;
 	Random rand = new Random();
 
-	
-	public sorting(){
+	public sorting() {
 		super("sorting");
-		
+
 		JPanel selectplace = new JPanel();
-		selectplace.setLayout(new GridLayout(1,4));
-		
-		pro= new JLabel("problem");
+		selectplace.setLayout(new GridLayout(1, 4));
+
+		pro = new JLabel("problem");
 		selectplace.add(pro);
-		prodemo= new JComboBox(problem);
+		prodemo = new JComboBox(problem);
 		selectplace.add(prodemo);
-		
-		al=new JLabel("algorithm");
+
+		al = new JLabel("algorithm");
 		selectplace.add(al);
-		aldemo= new JComboBox(algorithm);
+		aldemo = new JComboBox(algorithm);
 		aldemo.addItemListener(new itemhandler());
 		selectplace.add(aldemo);
-		
+
 		JPanel buttonplace = new JPanel();
-		buttonplace.setLayout(new GridLayout(1,5));
-		
-		run =new JButton("run");
-		run.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				buttonselect=0;
-			}
-			});
-		stop =new JButton("stop");
-		stop.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				buttonselect=1;
-			}
-			});
-		back =new JButton("back");
-		back.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				buttonselect=2;
-			}
-			});
-		reset =new JButton("reset");
-		reset.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				//重畫
-				points= new Point[100];
+		buttonplace.setLayout(new GridLayout(1, 5));
+
+		run = new JButton("run");
+		run.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//System.out.print("get");
+				buttonselect = 0;
+				//有bug，到這邊直接卡死
+				selectionSort();
 				repaint();
 				
 			}
-			});
-		exit =new JButton("exit");
-		exit.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-			System.exit(0);
+		});
+		stop = new JButton("stop");
+		stop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonselect = 1;
+				//System.out.print("get");
 			}
-			});
+		});
+		back = new JButton("back");
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonselect = 2;
+			}
+		});
+		reset = new JButton("reset");
+		reset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// 重畫
+				swape=new Point[100];
+				points = new Point[100];
+				repaint();
+
+			}
+		});
+		exit = new JButton("exit");
+		exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 		buttonplace.add(run);
 		buttonplace.add(stop);
 		buttonplace.add(back);
 		buttonplace.add(reset);
 		buttonplace.add(exit);
-		
-		
-		visual= new showpanel();
-		
-		
+
+		visual = new showpanel();
+
 		visual.setBackground(Color.gray);
-		add(visual,BorderLayout.CENTER);
-		
-		add(selectplace,BorderLayout.NORTH);
-		add(buttonplace,BorderLayout.SOUTH);
-		
-		
-		
-		
+		add(visual, BorderLayout.CENTER);
+
+		add(selectplace, BorderLayout.NORTH);
+		add(buttonplace, BorderLayout.SOUTH);
+
 	}
-	private class itemhandler implements ItemListener{
+
+	private class itemhandler implements ItemListener {
 
 		public void itemStateChanged(ItemEvent e) {
-			alselect=aldemo.getSelectedIndex();
-			proselect=prodemo.getSelectedIndex();
-			
+			alselect = aldemo.getSelectedIndex();
+			proselect = prodemo.getSelectedIndex();
+
 		}
-     }
-	private class showpanel extends JPanel{
-		public showpanel(){
-			
+	}
+
+	public class showpanel extends JPanel {
+		public showpanel() {
+
 		}
+
+		// 每次畫面改變都會被叫出來
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			
-			//抓現在視窗尺寸
+
+			// 抓現在視窗尺寸
 			visualview = this.getSize();
-			int vwidth = (int) (visualview.width);
-			int vheight = (int) (visualview.height);
-			visual.setBounds(5, 25, ((int)vwidth),  ((int)vheight));
-			
-			for (int i = 0; i < pointcount; i++){
-				
-				x = rand.nextInt((int)(vwidth))+10;
-				//避免被button蓋掉
-	            y = rand.nextInt((int)(vheight-35))+20;
-	            Point p = new Point(x, y);
-	            points[i]=p;
-				if(points[i]!=null){
-					
-					g.fillOval(points[i].x, points[i].y,10,10);
+			vwidth = (int) (visualview.width);
+			vheight = (int) (visualview.height);
+			visual.setBounds(5, 25, ((int) vwidth), ((int) vheight));
+
+			// 印出亂點
+			for (int i = 0; i < pointcount; i++) {
+				x = rand.nextInt((int) (vwidth)) + 10;
+				// 避免被button蓋掉
+				y = rand.nextInt((int) (vheight - 35)) + 20;
+				Point p = new Point(x, y);
+				points[i] = p;
+				if (points[i] != null) {
+					g.fillOval(points[i].x, points[i].y, 10, 10);
 				}
-			}	
-			
-			
+				if(swape[i] != null){
+					g.fillOval(swape[i].x, swape[i].y, 10, 10);
+				}
 			}
 			
+
+			if (buttonselect == 1) {
+				
+			}
+
 		}
+
+	}
 	
+	//叫不出來
+	public static void selectionSort() {
 	
+		//System.out.print("test");
+		for (int i = 0; i <  points.length-1; i++) {
+			
+			int min = i; // Index of smallest remaining value.
+			/*for (int j = i + 1; j < points.length; j++) {
+				//
+				// 算他們的xy位置大小排列
+				if ((points[min].x + points[min].y) > (points[j].x + points[j].y)) {
+					min = j; // 找出目前最小的了
+				}
+			}*/
+			//if (min != i) {
+				// 消掉原本的
+				points[min] = null;
+				// 排新的
+				// 設中間的那條線的點位置
+				//可以用4捨5入的公式 or 他的縣部會隨者尺寸跑
+				int width = (int) (( ((vwidth / 100)+1)) * (i + 1));
+				int height = (int)(( ((vheight / 100)+1)) * (i + 1));
+				Point swapepoint= new Point(width, height);
+				// 把他加入新的陣列
+				swape[i] = swapepoint;
+				// 現在要把舊的和欣的都一起畫上
+				// 要讓他逐步畫
+				
+
+			//}
+			//System.out.print(width+" ");
+		}
+		
+	}
 }
