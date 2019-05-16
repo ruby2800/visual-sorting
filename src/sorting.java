@@ -67,15 +67,18 @@ public class sorting extends JFrame {
 			}
 			});
 		back =new JButton("back");
-		run.addActionListener(new ActionListener(){
+		back.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				buttonselect=2;
 			}
 			});
 		reset =new JButton("reset");
-		run.addActionListener(new ActionListener(){
+		reset.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				buttonselect=3;
+				//­«µe
+				points= new Point[100];
+				repaint();
+				
 			}
 			});
 		exit =new JButton("exit");
@@ -130,28 +133,10 @@ public class sorting extends JFrame {
 				}
 			}	
 			
-			switch(buttonselect){
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-					if(buttonselect==3){
-						System.out.print("test");
-						repaint();
-					for (int i = 0; i < pointcount; i++){
-						x = rand.nextInt(600)+50;
-			            y = rand.nextInt(300)+50;
-			            Point p = new Point(x, y);
-			            points[i]=p;
-						if(points[i]!=null){
-							g.fillOval(points[i].x, points[i].y,10,10);
-						}
-					}
-					
-					}
+			
 			}
 			//repaint();
 		}
-	}
+	
 	
 }
