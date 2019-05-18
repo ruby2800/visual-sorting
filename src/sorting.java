@@ -9,17 +9,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import turtle.timerTask;
 
 public class sorting extends JFrame {
 
-	private JPanel visual;
+	private static JPanel visual;
 	private Dimension visualview;
 	private JButton run, stop, back, reset, exit;
 	int buttonselect = 0;
@@ -36,6 +41,9 @@ public class sorting extends JFrame {
 
 	private int pointcount = 100;
 	Random rand = new Random();
+	Timer timer = new Timer();
+	selectionSort s = new selectionSort();
+	Thread sthread = new Thread(s);
 
 	public sorting() {
 		super("sorting");
@@ -61,12 +69,16 @@ public class sorting extends JFrame {
 		run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonselect = 1;
-				selectionSort();
-				/*for (int i = 0; i < points.length; i++) {
-					System.out.println("point" + i + points[i]);
-				}*/
-
-				repaint();
+				selectionSort s = new selectionSort();
+				Thread sthread = new Thread(s);
+				sthread.start();
+				/*
+				 * for (int i = 0; i < points.length; i++) {
+				 * System.out.println("point" + i + points[i]); }
+				 */
+				// for (int i = 0; i < points.length - 1; i++) {
+				// repaint();
+				// }
 
 			}
 		});
@@ -87,8 +99,8 @@ public class sorting extends JFrame {
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				points = new Point[100];
-				buttonselect=0;
-				repaint();
+				buttonselect = 0;
+				visual.repaint();
 
 			}
 		});
@@ -154,7 +166,7 @@ public class sorting extends JFrame {
 			}
 
 			if (buttonselect == 1) {
-				for (int i = 0; i< points.length; i++) {
+				for (int i = 0; i < points.length; i++) {
 
 					if (points[i] != null) {
 						g.fillOval(points[i].x, points[i].y, 10, 10);
@@ -168,43 +180,85 @@ public class sorting extends JFrame {
 
 	}
 
-	public static void selectionSort() {
+	class selectionSort implements Runnable {
 
-		for (int i = 0; i < points.length - 1; i++) {
+		public selectionSort() {
 
-			int min = i;
+		}
 
-			for (int j = i + 1; j < points.length; j++) {
-				int minall = points[min].x + points[min].y;
-				int jall = points[j].x + points[j].y;
-				// 算他們的xy位置大小排列
-				if (minall > jall) {
+		public void run() {
+			sort();
+		}
 
-					min = j; // 找出目前最小的了
+		public void sort() {
+			for (int i = 0; i < points.length - 1; i++) {
 
+				int min = i;
+
+				for (int j = i + 1; j < points.length; j++) {
+					int minall = points[min].x + points[min].y;
+					int jall = points[j].x + points[j].y;
+					// 算他們的xy位置大小排列
+					if (minall > jall) {
+
+						min = j; // 找出目前最小的了
+
+					}
 				}
-			}
-			
-
-				Point temp = points[i];
-				// 目前最小的
-				points[i] = points[min];
-				// 交換
-				points[min] = temp;
 
 				// 可以用4捨5入的公式 or 他的縣部會隨者尺寸跑
 				int width = (int) ((((vwidth / 100) + 1)) * (i + 1));
 				int height = (int) ((((vheight / 100) + 1)) * (i + 1));
 				Point swapepoint = new Point(width, height);
-				// 最小的排出
-				points[i] = swapepoint;
-				// 要讓他逐步畫
 
-			
+				swapaction(points[i], points[min], swapepoint);
+				/*
+				 * System.out.println(points[i]);
+				 * System.out.println(points[min]);
+				 * System.out.println(swapepoint+"-----");
+				 */
+				// Point temp = points[i];
+				// 目前最小的
+				// points[i] = points[min];
+				// 交換
+				// points[min] = temp;
+				// 最小的排出
+				// points[i] = swapepoint;
+				// showpenal.repaint();
+				// 要加動畫，讓他速度變慢
+				// System.out.println("visual");
+				// visual.repaint();
+
+			}
+			Point special = new Point(800, 400);
+			points[99] = special;
+			// 很討厭的最後一個值
 
 		}
-		//Point special = new Point(800, 400);
-		//points[99] = special;
+
+		public void swapaction(Point a, Point b, Point c) {
+
+			try {
+				Thread.sleep(100);
+				// System.out.println(a);
+				// System.out.println(b);
+				// System.out.println(c);
+				Point temp = a;
+				// 目前最小的
+				a = b;
+				// 交換
+				b = temp;
+				a = c;
+				// 我明明都排好啦為啥部印出恩
+
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			visual.repaint();
+
+		}
 
 	}
+
 }
