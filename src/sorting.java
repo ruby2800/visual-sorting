@@ -24,7 +24,7 @@ import turtle.timerTask;
 
 public class sorting extends JFrame {
 
-	private static JPanel visual;
+	private  showpanel visual;
 	private Dimension visualview;
 	private JButton run, stop, back, reset, exit;
 	int buttonselect = 0;
@@ -41,7 +41,7 @@ public class sorting extends JFrame {
 
 	private int pointcount = 100;
 	Random rand = new Random();
-	Timer timer = new Timer();
+	//Timer timer = new Timer();
 	selectionSort s = new selectionSort();
 	Thread sthread = new Thread(s);
 
@@ -68,14 +68,14 @@ public class sorting extends JFrame {
 		run = new JButton("run");
 		run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				buttonselect = 1;
+				
 				selectionSort s = new selectionSort();
 				Thread sthread = new Thread(s);
 				sthread.start();
-				/*
-				 * for (int i = 0; i < points.length; i++) {
-				 * System.out.println("point" + i + points[i]); }
-				 */
+				buttonselect = 1;
+				  /*for (int i = 0; i < points.length; i++) {
+				  System.out.println("point" + i + points[i]); }*/
+				 
 				// for (int i = 0; i < points.length - 1; i++) {
 				// repaint();
 				// }
@@ -86,6 +86,7 @@ public class sorting extends JFrame {
 		stop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonselect = 1;
+				sthread.stop();
 
 			}
 		});
@@ -167,7 +168,9 @@ public class sorting extends JFrame {
 
 			if (buttonselect == 1) {
 				for (int i = 0; i < points.length; i++) {
-
+					//瞷禲ㄢΩ
+					//タ絋琌ぃ琌璶禲100Ω
+					//System.out.println("point" + i + points[i]);
 					if (points[i] != null) {
 						g.fillOval(points[i].x, points[i].y, 10, 10);
 					}
@@ -180,7 +183,7 @@ public class sorting extends JFrame {
 
 	}
 
-	class selectionSort implements Runnable {
+	public class selectionSort implements Runnable {
 
 		public selectionSort() {
 
@@ -211,23 +214,28 @@ public class sorting extends JFrame {
 				int height = (int) ((((vheight / 100) + 1)) * (i + 1));
 				Point swapepoint = new Point(width, height);
 
-				swapaction(points[i], points[min], swapepoint);
-				/*
-				 * System.out.println(points[i]);
-				 * System.out.println(points[min]);
-				 * System.out.println(swapepoint+"-----");
-				 */
-				// Point temp = points[i];
+				//swapaction(points[i], points[min], swapepoint);
+				
+				 // System.out.println(points[i]);
+				 //System.out.println(points[min]);
+				//⊿Τpoints
+				 
+				 
+				 //Point temp = points[i];
 				// ヘ玡程
 				// points[i] = points[min];
 				// ユ传
 				// points[min] = temp;
 				// 程逼
-				// points[i] = swapepoint;
+				 points[i] = swapaction(points[i], points[min], swapepoint);
+				 //System.out.println(points[i]+"-----");
+				 /*System.out.println(points[i]);
+				 System.out.println(points[min]);
+				System.out.println(swapepoint);*/
 				// showpenal.repaint();
 				// 璶笆礶琵硉跑篊
 				// System.out.println("visual");
-				// visual.repaint();
+				//visual.repaint();
 
 			}
 			Point special = new Point(800, 400);
@@ -236,27 +244,31 @@ public class sorting extends JFrame {
 
 		}
 
-		public void swapaction(Point a, Point b, Point c) {
+		public Point swapaction(Point a, Point b, Point c) {
 
 			try {
-				Thread.sleep(100);
-				// System.out.println(a);
-				// System.out.println(b);
-				// System.out.println(c);
+//			┑筐禲禬Ω
+				//何1
+				Thread.sleep(20);
+			 
 				Point temp = a;
 				// ヘ玡程
 				a = b;
 				// ユ传
 				b = temp;
 				a = c;
-				// и常逼罢裕场
+				/*或ㄓ琌B
+				System.out.println(a);
+				 System.out.println(b);
+				System.out.println(c);*/
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			//翴琌ぃ︽repaint
 			visual.repaint();
-
+			return a;
 		}
 
 	}
