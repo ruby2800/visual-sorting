@@ -29,7 +29,7 @@ public class sorting extends JFrame {
 	private static final String[] algorithm = { "selection sort", "bubble sort", "quicksort" };
 	private static final String[] problem = { "sorting", "other" };
 	public static Point points[] = new Point[100];
-	public static Point swape[] = new Point[100];
+	//public static Point swape[] = new Point[100];
 	 int x, y;
 	static int vwidth,vheight;
 	
@@ -62,9 +62,13 @@ public class sorting extends JFrame {
 		run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//System.out.print("get");
-				buttonselect = 0;
-				//有bug，到這邊直接卡死
+				buttonselect = 1;
 				selectionSort();
+				//我他嬤真的排好啦幹
+				for(int i =0;i<points.length;i++){
+					System.out.println("point"+i+points[i]);
+				}
+				
 				repaint();
 				
 			}
@@ -86,7 +90,7 @@ public class sorting extends JFrame {
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// 重畫
-				swape=new Point[100];
+				//swape=new Point[100];
 				points = new Point[100];
 				repaint();
 
@@ -139,6 +143,7 @@ public class sorting extends JFrame {
 			visual.setBounds(5, 25, ((int) vwidth), ((int) vheight));
 
 			// 印出亂點
+			if(buttonselect==0 ){
 			for (int i = 0; i < pointcount; i++) {
 				x = rand.nextInt((int) (vwidth)) + 10;
 				// 避免被button蓋掉
@@ -148,13 +153,21 @@ public class sorting extends JFrame {
 				if (points[i] != null) {
 					g.fillOval(points[i].x, points[i].y, 10, 10);
 				}
-				if(swape[i] != null){
-					g.fillOval(swape[i].x, swape[i].y, 10, 10);
-				}
+
+				
+			}
 			}
 			
 
-			if (buttonselect == 1) {
+			if (buttonselect!=0) {
+				for (int i = 0; i < points.length; i++) {
+					
+					if (points[i] != null) {
+						g.fillOval(points[i].x, points[i].y, 10, 10);
+					}
+
+					
+				}
 				
 			}
 
@@ -169,30 +182,49 @@ public class sorting extends JFrame {
 		for (int i = 0; i <  points.length-1; i++) {
 			
 			int min = i; // Index of smallest remaining value.
-			/*for (int j = i + 1; j < points.length; j++) {
-				//
+			
+			
+			
+			//System.out.println(minall);
+			
+			for (int j = i + 1; j < points.length; j++) {
+				//int minall=points[min].x + points[min].y;
+				int minall=points[min].x + points[min].y;
+				int jall=points[j].x + points[j].y;
+				//System.out.print(minall+"+"+jall+"---");
 				// 算他們的xy位置大小排列
-				if ((points[min].x + points[min].y) > (points[j].x + points[j].y)) {
+				if (minall >jall ) {
+					//System.out.println(j+"+"+min+"---");
+					//System.out.println(jall+"+"+minall+"---");
 					min = j; // 找出目前最小的了
+					
 				}
-			}*/
-			//if (min != i) {
-				// 消掉原本的
-				points[min] = null;
+			}
+			if (min != i) {
+				
+				Point temp = points[i];
+				//目前最小的
+				//System.out.println("temp"+temp);
+	            points[i] = points[min];
+	           // System.out.println("swape"+points[i]);
+	            //交換
+	            points[min] = temp;
+				
 				// 排新的
 				// 設中間的那條線的點位置
 				//可以用4捨5入的公式 or 他的縣部會隨者尺寸跑
 				int width = (int) (( ((vwidth / 100)+1)) * (i + 1));
 				int height = (int)(( ((vheight / 100)+1)) * (i + 1));
 				Point swapepoint= new Point(width, height);
-				// 把他加入新的陣列
-				swape[i] = swapepoint;
-				// 現在要把舊的和欣的都一起畫上
+				// 最小的排出，畫不出
+				points[i] = swapepoint;
+				//System.out.println("new"+points[i]);
 				// 要讓他逐步畫
 				
 
-			//}
-			//System.out.print(width+" ");
+			}
+			//我他媽排過了阿
+			//System.out.println("point"+i+points[i]);
 		}
 		
 	}
