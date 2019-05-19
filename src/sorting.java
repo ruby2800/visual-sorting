@@ -34,6 +34,8 @@ public class sorting extends JFrame {
 	int count = 0;
 	private JLabel pro, al;
 	private JComboBox prodemo, aldemo;
+	//初始是第一個
+	int change=0;
 	private int proselect, alselect;
 	private static final String[] algorithm = { "selection sort", "bubble sort", "insertsort" };
 	private static final String[] problem = { "sorting", "other" };
@@ -129,6 +131,8 @@ public class sorting extends JFrame {
 		reset = new JButton("reset");
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				
 				points = new Point[100];
 				buttonselect = 0;
 				visual.repaint();
@@ -161,7 +165,26 @@ public class sorting extends JFrame {
 	private class itemhandler implements ItemListener {
 
 		public void itemStateChanged(ItemEvent e) {
+			
+			change=alselect;
 			alselect = aldemo.getSelectedIndex();
+			
+			
+			if (alselect!= change) {
+				
+				if (alselect == 0) {
+					s.stoprun();
+					sthread.interrupt();
+				} else if (alselect == 1) {
+					b.stoprun();
+					bthread.interrupt();
+				}
+
+				points = new Point[100];
+				buttonselect = 0;
+				visual.repaint();
+				System.out.println("change");
+			}
 			proselect = prodemo.getSelectedIndex();
 
 		}
