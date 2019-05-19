@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -34,7 +35,7 @@ public class sorting extends JFrame {
 	private JLabel pro, al;
 	private JComboBox prodemo, aldemo;
 	private int proselect, alselect;
-	private static final String[] algorithm = { "selection sort", "bubble sort", "quicksort" };
+	private static final String[] algorithm = { "selection sort", "bubble sort", "insertsort" };
 	private static final String[] problem = { "sorting", "other" };
 	public static Point points[] = new Point[100];
 	public static Point store[] = new Point[100];
@@ -167,6 +168,8 @@ public class sorting extends JFrame {
 	}
 
 	public class showpanel extends JPanel {
+		private Point mark1;
+		private Point mark2;
 		public showpanel() {
 
 		}
@@ -174,7 +177,7 @@ public class sorting extends JFrame {
 		// –Ω礶э跑常穦砆ㄓ
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
-
+			Graphics2D g2 = (Graphics2D) g;
 			// ъ瞷跌怠へ
 			visualview = this.getSize();
 			vwidth = (int) (visualview.width);
@@ -192,6 +195,9 @@ public class sorting extends JFrame {
 					// 
 					store[i] = p;
 					if (points[i] != null) {
+						
+
+						
 						g.fillOval(points[i].x, points[i].y, 10, 10);
 					}
 
@@ -202,6 +208,14 @@ public class sorting extends JFrame {
 				for (int i = 0; i < points.length; i++) {
 
 					if (points[i] != null) {
+						if (points[i] == mark1) {
+							g2.setColor(Color.RED);			
+						} else if (points[i] == mark2) {
+							g2.setColor(Color.GREEN);
+						} else {
+							g2.setColor(Color.BLACK);
+						}
+						
 						g.fillOval(points[i].x, points[i].y, 10, 10);
 					}
 
@@ -227,7 +241,69 @@ public class sorting extends JFrame {
 			}
 
 		}
+		public synchronized void setmark(Point m1, Point m2) {
+			this.mark1 = m1;
+			this.mark2 = m2;
+		}
 
+	}
+	//篊篊糶
+	public class insertsort implements Runnable {
+		public insertsort() {
+
+		}
+
+		public void run() {
+			sort();
+
+		}
+
+		public void stoprun() {
+			Run = false;
+		}
+
+		public void sort() {
+			for (int i = 1; i < points.length ; i++) {
+				
+				int v = points[i].x + points[i].y;
+				int j=i-1;
+				int second = points[j].x + points[j].y;
+				 
+				 while((j>=0) && (second>v)){
+					 points[j+1]=points[j];
+					j=j-1;
+				 }
+				 points[j+1]=points[i];
+				 
+				int width = (int) ((((vwidth / 100) + 1)) * (i + 1));
+				int height = (int) ((((vheight / 100) + 1)) * (i + 1));
+				Point swapepoint = new Point(width, height);
+
+			}
+
+			Point special = new Point(800, 400);
+			points[99] = special;
+			// 癚菇程
+
+		}
+
+		public Point swapaction(Point a, Point b, Point c) {
+
+			try {
+				Thread.sleep(20);
+				Point temp = a;
+				a = b;
+				b = temp;
+				a = c;
+
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			visual.repaint();
+
+			return a;
+		}
 	}
 
 	public class bubblesort implements Runnable {
@@ -277,27 +353,19 @@ public class sorting extends JFrame {
 		}
 
 		public Point swapaction(Point a, Point b, Point c) {
-
+			visual.setmark(a, c);
+			
 			try {
-				// 何1
 				Thread.sleep(20);
-
 				Point temp = a;
-				// ヘ玡程
 				a = b;
-				// ユ传
 				b = temp;
 				a = c;
-				/*
-				 * 或ㄓ琌B System.out.println(a); System.out.println(b);
-				 * System.out.println(c);
-				 */
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 			visual.repaint();
 
 			return a;
@@ -360,10 +428,10 @@ public class sorting extends JFrame {
 		}
 
 		public Point swapaction(Point a, Point b, Point c) {
-
+				visual.setmark(a, c);
 			try {
 				// 何1
-				Thread.sleep(20);
+				Thread.sleep(100);
 
 				Point temp = a;
 				// ヘ玡程
