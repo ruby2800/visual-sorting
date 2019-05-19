@@ -95,10 +95,12 @@ public class sorting extends JFrame {
 		back = new JButton("back");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				s.stoprun();
+				sthread.interrupt();
 				buttonselect = 2;
-				count--;
+				points[count]=store[count];
 				visual.repaint();
+				count--;
 			}
 		});
 		reset = new JButton("reset");
