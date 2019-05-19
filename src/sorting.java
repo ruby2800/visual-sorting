@@ -29,8 +29,8 @@ public class sorting extends JFrame {
 	private JButton run, stop, back, reset, exit;
 	public boolean Run = true;
 	int buttonselect = 0;
-	//ユ传
-	int count=0;
+	// ユ传
+	int count = 0;
 	private JLabel pro, al;
 	private JComboBox prodemo, aldemo;
 	private int proselect, alselect;
@@ -48,6 +48,9 @@ public class sorting extends JFrame {
 	// Timer timer = new Timer();
 	selectionSort s = new selectionSort();
 	Thread sthread = new Thread(s);
+
+	bubblesort b = new bubblesort();
+	Thread bthread = new Thread(b);
 
 	public sorting() {
 		super("sorting");
@@ -69,38 +72,57 @@ public class sorting extends JFrame {
 		JPanel buttonplace = new JPanel();
 		buttonplace.setLayout(new GridLayout(1, 5));
 
-		//Ω穦sleep
+		// Ω穦sleep
 		run = new JButton("run");
 		run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonselect = 1;
 				Run = true;
-				selectionSort s = new selectionSort();
-				Thread sthread = new Thread(s);
+				if (alselect == 0) {
+					selectionSort s = new selectionSort();
+					Thread sthread = new Thread(s);
+					sthread.start();
+				} else if (alselect == 1) {
 
-				sthread.start();
+					bubblesort b = new bubblesort();
+					Thread bthread = new Thread(b);
+					bthread.start();
+				}
 
 			}
 		});
 		stop = new JButton("stop");
 		stop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				s.stoprun();
-				sthread.interrupt();
+				if (alselect == 0) {
+					s.stoprun();
+					sthread.interrupt();
+				} else if (alselect == 1) {
+					b.stoprun();
+					bthread.interrupt();
+				}
 
 			}
 		});
-		//璶ぇ玡翴翴稦êи稦估р逼皚稦
+
 		back = new JButton("back");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				s.stoprun();
-				sthread.interrupt();
+				// 璶盢祘氨ゎ
+				if (alselect == 0) {
+					s.stoprun();
+					sthread.interrupt();
+				} else if (alselect == 1) {
+					b.stoprun();
+					bthread.interrupt();
+				}
+
 				buttonselect = 2;
-				points[count]=store[count];
+				// 璶˙て
+				points[count] = store[count];
 				visual.repaint();
 				count--;
+
 			}
 		});
 		reset = new JButton("reset");
@@ -134,6 +156,7 @@ public class sorting extends JFrame {
 
 	}
 
+	// 传璶穝ざ
 	private class itemhandler implements ItemListener {
 
 		public void itemStateChanged(ItemEvent e) {
@@ -166,8 +189,8 @@ public class sorting extends JFrame {
 					y = rand.nextInt((int) (vheight - 35)) + 20;
 					Point p = new Point(x, y);
 					points[i] = p;
-					//
-					store[i]=p;
+					// 
+					store[i] = p;
 					if (points[i] != null) {
 						g.fillOval(points[i].x, points[i].y, 10, 10);
 					}
@@ -186,18 +209,18 @@ public class sorting extends JFrame {
 
 			}
 			if (buttonselect == 2) {
-				for (int i = 0; i <count; i++) {
+				for (int i = 0; i < count; i++) {
 
 					if (points[i] != null) {
 						g.fillOval(points[i].x, points[i].y, 10, 10);
-						
+
 					}
 
 				}
-				for (int j=count;j<store.length;j++){
+				for (int j = count; j < store.length; j++) {
 					if (store[j] != null) {
 						g.fillOval(store[j].x, store[j].y, 10, 10);
-						
+
 					}
 				}
 
@@ -205,6 +228,80 @@ public class sorting extends JFrame {
 
 		}
 
+	}
+
+	public class bubblesort implements Runnable {
+		public bubblesort() {
+
+		}
+
+		public void run() {
+			sort();
+
+		}
+
+		public void stoprun() {
+			Run = false;
+		}
+
+		public void sort() {
+			for (int i = 0; i < points.length - 1; i++) {
+
+				// int min = i;
+				int width = (int) ((((vwidth / 100) + 1)) * (i + 1));
+				int height = (int) ((((vheight / 100) + 1)) * (i + 1));
+				Point swapepoint = new Point(width, height);
+
+				// 或㎝量竡??
+				for (int j = 0; j < points.length - 1; j++) {
+					int first = points[j].x + points[j].y;
+					int second = points[j + 1].x + points[j + 1].y;
+					// 衡xy竚逼
+					if (first > second) {
+
+						if (Run) {
+							count = i;
+							points[i] = swapaction(points[j], points[j + 1], swapepoint);
+
+						}
+
+					}
+				}
+
+			}
+
+			Point special = new Point(800, 400);
+			points[99] = special;
+			// 癚菇程
+
+		}
+
+		public Point swapaction(Point a, Point b, Point c) {
+
+			try {
+				// 何1
+				Thread.sleep(20);
+
+				Point temp = a;
+				// ヘ玡程
+				a = b;
+				// ユ传
+				b = temp;
+				a = c;
+				/*
+				 * 或ㄓ琌B System.out.println(a); System.out.println(b);
+				 * System.out.println(c);
+				 */
+
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			visual.repaint();
+
+			return a;
+		}
 	}
 
 	public class selectionSort implements Runnable {
@@ -246,14 +343,14 @@ public class sorting extends JFrame {
 
 				// repaint 琌裕edm╰参┮碞穦freeze
 				// рwhile传Θif碞и茅
-				//璶衡ユ传材碭翴
+				// 璶衡ユ传材碭翴
 				if (Run) {
-					count=i;
-					
+					count = i;
+
 					points[i] = swapaction(points[i], points[min], swapepoint);
+
 					// visual.repaint();
 				}
-				
 
 			}
 			Point special = new Point(800, 400);
@@ -261,14 +358,12 @@ public class sorting extends JFrame {
 			// 癚菇程
 
 		}
-		
-		
-	
+
 		public Point swapaction(Point a, Point b, Point c) {
 
 			try {
 				// 何1
-				Thread.sleep(100);
+				Thread.sleep(20);
 
 				Point temp = a;
 				// ヘ玡程
