@@ -26,7 +26,7 @@ import turtle.timerTask;
 public class sorting extends JFrame {
 
 	private showpanel visual;
-	//抓目前介面大小
+	// 抓目前介面大小
 	private Dimension visualview;
 	private JButton run, stop, back, reset, exit;
 	public boolean Run = true;
@@ -35,10 +35,10 @@ public class sorting extends JFrame {
 	int count = 0;
 	private JLabel pro, al;
 	private JComboBox prodemo, aldemo;
-	//初始是第一個
-	int change=0;
+	// 初始是第一個
+	int change = 0;
 	private int proselect, alselect;
-	private static final String[] algorithm = { "selection sort", "bubble sort", "insertsort" };
+	private static final String[] algorithm = { "selection sort", "bubble sort", "insertsort", "quick sort" };
 	private static final String[] problem = { "sorting", "other" };
 	public static Point points[] = new Point[100];
 	public static Point store[] = new Point[100];
@@ -90,18 +90,29 @@ public class sorting extends JFrame {
 					bubblesort b = new bubblesort();
 					Thread bthread = new Thread(b);
 					bthread.start();
+				} else if (alselect == 2) {
+
+					insertsort i = new insertsort();
+					Thread ithread = new Thread(i);
+					ithread.start();
+				} else if (alselect == 3) {
+
+					quicksort q = new quicksort();
+					Thread qthread = new Thread(q);
+					qthread.start();
 				}
+				
 
 			}
 		});
-		
+
 		stop = new JButton("stop");
 		stop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (alselect == 0) {
-					//先停止程式
+					// 先停止程式
 					s.stoprun();
-					//阻斷執行序
+					// 阻斷執行序
 					sthread.interrupt();
 				} else if (alselect == 1) {
 					b.stoprun();
@@ -127,7 +138,7 @@ public class sorting extends JFrame {
 				// 要同步化
 				points[count] = store[count];
 				visual.repaint();
-				//back的次數
+				// back的次數
 				count--;
 
 			}
@@ -135,7 +146,7 @@ public class sorting extends JFrame {
 		reset = new JButton("reset");
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				points = new Point[100];
 				buttonselect = 0;
 				visual.repaint();
@@ -164,18 +175,16 @@ public class sorting extends JFrame {
 
 	}
 
-	
 	private class itemhandler implements ItemListener {
 
 		public void itemStateChanged(ItemEvent e) {
-			
-			change=alselect;
+
+			change = alselect;
 			alselect = aldemo.getSelectedIndex();
-			
-			
-			//防止沒按stop就按換演算法
-			if (alselect!= change) {
-				
+
+			// 防止沒按stop就按換演算法
+			if (alselect != change) {
+
 				if (alselect == 0) {
 					s.stoprun();
 					sthread.interrupt();
@@ -187,7 +196,7 @@ public class sorting extends JFrame {
 				points = new Point[100];
 				buttonselect = 0;
 				visual.repaint();
-				
+
 			}
 			proselect = prodemo.getSelectedIndex();
 
@@ -195,9 +204,10 @@ public class sorting extends JFrame {
 	}
 
 	public class showpanel extends JPanel {
-		//紀錄交換的point
+		// 紀錄交換的point
 		private Point mark1;
 		private Point mark2;
+
 		public showpanel() {
 
 		}
@@ -223,34 +233,34 @@ public class sorting extends JFrame {
 					// 存
 					store[i] = p;
 					if (points[i] != null) {
-						
+
 						g.fillOval(points[i].x, points[i].y, 10, 10);
 					}
 
 				}
 			}
-			
-			//開始run
+
+			// 開始run
 			if (buttonselect == 1) {
 				for (int i = 0; i < points.length; i++) {
 
 					if (points[i] != null) {
 						if (points[i] == mark1) {
-							g2.setColor(Color.RED);			
+							g2.setColor(Color.RED);
 						} else if (points[i] == mark2) {
 							g2.setColor(Color.GREEN);
 						} else {
 							g2.setColor(Color.BLACK);
 						}
-						
+
 						g.fillOval(points[i].x, points[i].y, 10, 10);
 					}
 
 				}
 
 			}
-			
-			//畫back
+
+			// 畫back
 			if (buttonselect == 2) {
 				for (int i = 0; i < count; i++) {
 
@@ -270,13 +280,14 @@ public class sorting extends JFrame {
 			}
 
 		}
+
 		public synchronized void setmark(Point m1, Point m2) {
 			this.mark1 = m1;
 			this.mark2 = m2;
 		}
 
 	}
-	/*我之後有空會繼續寫完
+
 	public class insertsort implements Runnable {
 		public insertsort() {
 
@@ -291,49 +302,55 @@ public class sorting extends JFrame {
 			Run = false;
 		}
 
-		public void sort() {
-			for (int i = 1; i < points.length ; i++) {
-				
-				int v = points[i].x + points[i].y;
-				int j=i-1;
-				int second = points[j].x + points[j].y;
-				 
-				 while((j>=0) && (second>v)){
-					 points[j+1]=points[j];
-					j=j-1;
-				 }
-				 points[j+1]=points[i];
-				 
-				int width = (int) ((((vwidth / 100) + 1)) * (i + 1));
-				int height = (int) ((((vheight / 100) + 1)) * (i + 1));
-				Point swapepoint = new Point(width, height);
+		int count = 0;
 
+		public void insert(int input, int ok) {
+			int okvalue = points[ok].x + points[ok].y;
+			int inputvalue = points[input].x + points[input].y;
+
+			while (okvalue > inputvalue) {
+				points[ok++] = points[ok];
+				ok--;
+				okvalue = points[ok].x + points[ok].y;
 			}
 
+			int width = (int) ((((vwidth / 100) + 1)) * (count + 1));
+			int height = (int) ((((vheight / 100) + 1)) * (count + 1));
+			Point swapepoint = new Point(width, height);
+			System.out.println(count);
+			points[count] = swapaction(points[ok++], points[input], swapepoint);
+			count++;
+		}
+
+		public void sort() {
+			for (int i = 2; i < points.length; i++) {
+
+				insert(i, i--);
+
+			}
 			Point special = new Point(800, 400);
-			points[99] = special;
-			// 很討厭的最後一個值
+			points[99] = special; // 很討厭的最後一個值
 
 		}
 
 		public Point swapaction(Point a, Point b, Point c) {
 
 			try {
-				Thread.sleep(20);
+				Thread.sleep(100);
 				Point temp = a;
 				a = b;
 				b = temp;
 				a = c;
 
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			} catch (InterruptedException e) { // TODO Auto-generated catch
+												// block
 				e.printStackTrace();
 			}
 			visual.repaint();
 
 			return a;
 		}
-	}*/
+	}
 
 	public class bubblesort implements Runnable {
 		public bubblesort() {
@@ -355,8 +372,8 @@ public class sorting extends JFrame {
 				int height = (int) ((((vheight / 100) + 1)) * (i + 1));
 				Point swapepoint = new Point(width, height);
 
-				// 怎麼和講義上??
-				for (int j = 0; j < points.length - 1; j++) {
+			
+				for (int j = 0; j < points.length - 1 - i; j++) {
 					int first = points[j].x + points[j].y;
 					int second = points[j + 1].x + points[j + 1].y;
 					// 算他們的xy位置大小排列
@@ -380,9 +397,88 @@ public class sorting extends JFrame {
 
 		public Point swapaction(Point a, Point b, Point c) {
 			visual.setmark(a, c);
-			
+
 			try {
-				Thread.sleep(100);
+				Thread.sleep(15);
+				Point temp = a;
+				a = b;
+				b = temp;
+				a = c;
+
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			visual.repaint();
+
+			return a;
+		}
+	}
+
+	public class quicksort implements Runnable {
+		public quicksort() {
+
+		}
+
+		public void run() {
+			sort(0, points.length - 1);
+		}
+
+		public void stoprun() {
+			Run = false;
+		}
+
+		int count = 0;
+
+		public void sort(int left, int right) {
+
+			if (left < right) {
+
+				int i = left;
+				int j = right;
+				int pivot = points[j].x + points[j].y;
+				do {
+					do {
+						i++;
+					} while ((points[i].x + points[i].y) < pivot);
+					do {
+						j--;
+					} while ((points[j].x + points[j].y) > pivot);
+					if (i < j) {
+
+						int width = (int) ((((vwidth / 100) + 1)) * (count + 1));
+						int height = (int) ((((vheight / 100) + 1)) * (count + 1));
+						Point swapepoint = new Point(width, height);
+						points[count] = swapaction(points[j], points[j + 1], swapepoint);
+						count++;
+						System.out.println(count);
+					}
+				} while (i < j);
+
+				if (Run) {
+					int width = (int) ((((vwidth / 100) + 1)) * (count + 1));
+					int height = (int) ((((vheight / 100) + 1)) * (count + 1));
+					Point swapepoint = new Point(width, height);
+					points[count] = swapaction(points[j], points[left], swapepoint);
+					count++;
+					System.out.println(count);
+					sort(left, j - 1);
+					sort(j + 1, right);
+
+				}
+
+			}
+
+			Point special = new Point(800, 400);
+			points[99] = special;
+
+		}
+
+		public Point swapaction(Point a, Point b, Point c) {
+			visual.setmark(a, c);
+
+			try {
+				Thread.sleep(20);
 				Point temp = a;
 				a = b;
 				b = temp;
@@ -430,7 +526,6 @@ public class sorting extends JFrame {
 					}
 				}
 
-				
 				int width = (int) ((((vwidth / 100) + 1)) * (i + 1));
 				int height = (int) ((((vheight / 100) + 1)) * (i + 1));
 				Point swapepoint = new Point(width, height);
@@ -440,8 +535,10 @@ public class sorting extends JFrame {
 				// 要算交換到第幾個點
 				if (Run) {
 					count = i;
+					if (i != min) {
+						points[i] = swapaction(points[i], points[min], swapepoint);
+					}
 
-					points[i] = swapaction(points[i], points[min], swapepoint);
 				}
 
 			}
@@ -452,7 +549,7 @@ public class sorting extends JFrame {
 		}
 
 		public Point swapaction(Point a, Point b, Point c) {
-				visual.setmark(a, c);
+			visual.setmark(a, c);
 			try {
 				// 先睡1秒
 				Thread.sleep(100);
@@ -463,7 +560,6 @@ public class sorting extends JFrame {
 				// 交換
 				b = temp;
 				a = c;
-				
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -476,5 +572,7 @@ public class sorting extends JFrame {
 		}
 
 	}
+
+
 
 }
